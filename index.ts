@@ -1,7 +1,7 @@
-import express, { Express, Request, Response } from "express"
+import express, { Express } from "express"
 import dotenv from "dotenv"
 import * as database from './config/database'
-import Tasks from "./models/task.model"
+import mainV1Routes from "./api/v1/routes/index.route"
 
 dotenv.config()
 
@@ -10,16 +10,7 @@ database.connect() // kết nối với database
 const app: Express = express();
 const port: number | string = process.env.PORT || 3000
 
-app.get('/tasks', async (req: Request, res: Response) => {
-    const tasks = await Tasks.find({
-        deleted: false,
-    })
-
-    res.json({
-        code: 200,
-        tasks: tasks
-    })
-})
+mainV1Routes(app)
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
