@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "js",
+        // "outDir": "js",
         "target": "ES6", //Cho phép biên dịch code typescript sang kiểu ES6
         "module": "commonjs", //
         "removeComments": true,
