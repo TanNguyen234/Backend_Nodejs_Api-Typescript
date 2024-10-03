@@ -10,6 +10,9 @@ database.connect() // kết nối với database
 const app: Express = express();
 const port: number | string = process.env.PORT || 3000
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+
 mainV1Routes(app)
 
 app.listen(port, () => {
