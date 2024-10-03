@@ -175,3 +175,27 @@ export const edit = async (req: Request, res: Response) => {
         })
     }
 }
+
+//[DELETE] /api/v1/tasks/delete/:id
+export const deleteTask = async (req: Request, res: Response) => {//Ts: phải khác tên key trong js
+    try {
+        const id: string = req.params.id
+
+        await Task.updateOne({
+            _id: id
+        }, {
+            deleted: true,
+            deleteAt: Date.now()
+        })
+
+        res.json({
+            code: 200,
+            message: "Xóa thành công!",
+        })
+    } catch (error) {
+        res.json({
+            code: 400,
+            message: "Lỗi"
+        })
+    }
+}
