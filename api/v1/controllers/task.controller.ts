@@ -97,7 +97,8 @@ export const changeStatus = async (req: Request, res: Response) => {
 //[PATCH] /api/v1/tasks/change-multi
 export const changeMulti = async (req: Request, res: Response) => {
     enum Key {
-        STATUS = "status"
+        STATUS = "status",
+        DELETE = "delete",
     }
 
     try {
@@ -119,7 +120,21 @@ export const changeMulti = async (req: Request, res: Response) => {
                 })
                 
                 break;
-        
+            case Key.DELETE:
+                await Task.updateMany({
+                    _id: { $in: ids}
+                },{
+                    deleted: true,
+                    deleteAt: Date.now()
+                })
+                
+                res.json({
+                    code: 200,//success
+                    message: "Xóa thành công"
+                })
+
+                break;
+
             default:
                 res.json({
                     code: 400,//fail
