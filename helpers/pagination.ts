@@ -1,7 +1,7 @@
 interface ObjectPagination {
     currentPage: number;
     limitItem: number;
-    skip?: number | any;
+    skip?: number;
     totalPage?: number;
 }
 

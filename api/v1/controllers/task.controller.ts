@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import Task from "../models/task.model";
 import paginationHelper from '../../../helpers/pagination';
+import searchHelper from '../../../helpers/search';
+import { skip } from 'node:test';
 
 
 export const index = async (req: Request, res: Response) => {
@@ -8,6 +10,7 @@ export const index = async (req: Request, res: Response) => {
     interface Find {
         deleted: boolean,
         status?: string,
+        title?: RegExp
     }
 
     const find: Find = {
@@ -33,12 +36,20 @@ export const index = async (req: Request, res: Response) => {
     const countTasks: number = await Task.countDocuments(find); // Hàm count trong mongoose để tổng số sản phẩm
     let initPagination = {
         currentPage: 1,
-        limitItem: 2
+        limitItem: 2,
+        skip: 0
     }
 
     let objectPagination = paginationHelper(initPagination, req.query, countTasks)
     //End Pagination
-    const tasks = await Task.find(find).sort(sort).limit(objectPagination.limitItem).skip(objectPagination.skip)
+    //Search
+    let objectSearch = searchHelper(req.query)
+
+    if(req.query.keyword) {
+        find.title = objectSearch.regex
+    }
+    //End Search
+    const tasks = await Task.find(find).sort(sort).limit(objectPagination.limitItem).skip(objectPagination.skip ?? 0)
 
     res.json({
         code: 200,
