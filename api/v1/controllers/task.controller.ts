@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
 import Task from "../models/task.model";
+import paginationHelper from '../../../helpers/pagination';
+
 
 export const index = async (req: Request, res: Response) => {
     //Find
@@ -27,8 +29,16 @@ export const index = async (req: Request, res: Response) => {
         sort[sortKey] = req.query.sortValue;
     }
     //End Sort
+    //Pagination
+    const countTasks: number = await Task.countDocuments(find); // Hàm count trong mongoose để tổng số sản phẩm
+    let initPagination = {
+        currentPage: 1,
+        limitItem: 2
+    }
 
-    const tasks = await Task.find(find).sort(sort)
+    let objectPagination = paginationHelper(initPagination, req.query, countTasks)
+    //End Pagination
+    const tasks = await Task.find(find).sort(sort).limit(objectPagination.limitItem).skip(objectPagination.skip)
 
     res.json({
         code: 200,
