@@ -3,7 +3,14 @@ import dotenv from "dotenv";
 import cors from 'cors'
 import * as database from './config/database';
 import mainV1Routes from "./api/v1/routes/index.route";
-
+declare global {
+    namespace Express {
+      interface Request {
+        user?: any;  // Thay 'any' bằng kiểu chính xác nếu bạn biết rõ kiểu của 'user'
+      }
+    }
+} //Mở rộng request của express
+  
 dotenv.config()
 
 database.connect() // kết nối với database
